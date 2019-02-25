@@ -1,3 +1,4 @@
+import { PopupButtonRendererComponent } from './popup-button-renderer/popup-button-renderer.component';
 import { Component, OnInit } from '@angular/core';
 import { AppService } from './app.service';
 import { TableDataModel } from './app.model';
@@ -22,15 +23,20 @@ export class AppComponent implements OnInit {
   originalRowData: Array<TableDataModel> = [];
 
   // other ag-grid variables
-  public gridApi;
-  public defaultColDef;
-  public rowSelection = "single"; // or multiple if required
+  gridApi;
+  defaultColDef;
+  rowSelection = "single"; // or multiple if required
+  frameworkComponents;
 
   constructor(
     private appService: AppService
   ) { }
 
   ngOnInit() {
+    this.frameworkComponents = {
+      popupButtonRenderer: PopupButtonRendererComponent
+    }
+
     this.columnDefs = [
       {
         headerName: 'User id',
@@ -57,14 +63,17 @@ export class AppComponent implements OnInit {
         headerName: 'Time',
         field: 'TIME_SEC',
         suppressMenu: true
+      },
+      {
+        field: '', // empty column name since its an icon
+        suppressFilter: true,
+        cellRenderer: "popupButtonRenderer",
       }
     ];
 
 
     this.defaultColDef = {
-      // set every column width
       filter: "agTextColumnFilter",
-      // make every column editable
       sortable: true,
       autoHeight: true,
       resizable: true

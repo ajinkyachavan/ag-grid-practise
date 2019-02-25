@@ -1,6 +1,9 @@
-
 <div class="row">
-  <input type="number" [(ngModel)]="hoursInput" (ngModelChange)="onInputChange($event)">
+  <input
+    type="number"
+    [(ngModel)]="hoursInput"
+    (ngModelChange)="onInputChange($event)"
+  >
   <button (click)="getAllRecordsWithinInputHours()">
     Get all records for the hours
   </button>
@@ -16,6 +19,7 @@
   [defaultColDef]="defaultColDef"
   [pagination]="true"
   [paginationAutoPageSize]="true"
+  [frameworkComponents]="frameworkComponents"
   [rowSelection]="rowSelection"
   (rowClicked)="onRowClicked($event)"
   (rowSelected)="onRowSelected($event)"
@@ -23,4 +27,3 @@
   (modelUpdated)="onModelUpdated($event)"
 >
 </ag-grid-angular>
-
