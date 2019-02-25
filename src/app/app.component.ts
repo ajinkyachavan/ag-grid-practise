@@ -28,12 +28,14 @@ export class AppComponent implements OnInit {
         headerName: 'User id',
         field: 'USER_ID',
         filter: "agTextColumnFilter",
+        caseSensitive: true, // usually ag-grid lowercases anything you search, with this it won't
         suppressMenu: true
       },
       {
         headerName: 'Company cd',
         field: 'COMPANY_CD',
         filter: "agTextColumnFilter",
+        caseSensitive: true,
         suppressMenu: true,
         // sort: 'asc' // you can use this if you want sort by default . When you click on column, it will sort other ways anyway
       },
@@ -41,12 +43,14 @@ export class AppComponent implements OnInit {
         headerName: 'Before',
         field: 'BEFORE_EXECUTE_LOG',
         filter: "agTextColumnFilter",
+        caseSensitive: true,
         suppressMenu: true
       },
       {
         headerName: 'After',
         field: 'AFTER_EXECUTE_LOG',
         filter: "agTextColumnFilter",
+        caseSensitive: true,
         suppressMenu: true
       },
       {
@@ -59,6 +63,7 @@ export class AppComponent implements OnInit {
         headerName: 'Id',
         field: 'REQUEST_TRACKINGID',
         filter: "agTextColumnFilter",
+        caseSensitive: true,
         suppressMenu: true,
         hide: true // I think you wouldn't want to show id so hide: true
       }
@@ -76,7 +81,6 @@ export class AppComponent implements OnInit {
           console.log(error);
         }
       );
-
   }
 
   /**
@@ -90,7 +94,7 @@ export class AppComponent implements OnInit {
   }
 
   /**
-   * when row is selected e.g. the popup button is clicked
+   * when row is selected
    */
   onRowSelected(event) {
     console.log(event.rowIndex + "th row selected")
@@ -99,14 +103,12 @@ export class AppComponent implements OnInit {
     console.log("-------");
   }
 
-
-
   /**
    * @listens for any change in ag-grid.  
    */
   onModelUpdated($event) {
     // If you search for something and nothing matches, show "No Rows to show"
-    // showNoRowsOverlay() takes care of that, we don't need to know how
+    // inbuilt function of ag-grid showNoRowsOverlay() takes care of that, we don't need to know how
 
     // overlay = popup that shows when some error or info needs to be shown on 
     // top of grid. hideOverlay = hide any popups if data exists
