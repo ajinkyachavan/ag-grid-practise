@@ -33,3 +33,7 @@ Steps:
 
   - When you click on the button, the modal functionality is in the function showPopup()
     while the data in it is pointed by CustomPopupComponent
+
+
+4. Excel save
+  - install file-save & xlsx

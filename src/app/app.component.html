@@ -8,6 +8,14 @@
     <button (click)="getAllRecordsWithinInputHours()">
       Get all records for the hours
     </button>
+    <button
+      type="submit"
+      class="span6 pull-right"
+      style="text-align:right"
+      (click)="saveTableDataAsExcelFile()"
+    >
+      Save data as Excel
+    </button>
   </div>
 
   <ag-grid-angular

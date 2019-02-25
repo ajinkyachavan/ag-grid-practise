@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { TableDataModel } from './app.model';
 import { fromEvent } from 'rxjs';
 import * as _ from 'lodash';
+import { ExcelService } from './excel.service';
 
 @Component({
   selector: 'app-root',
@@ -29,7 +30,8 @@ export class AppComponent implements OnInit {
   frameworkComponents;
 
   constructor(
-    private appService: AppService
+    private appService: AppService,
+    private excelService: ExcelService
   ) { }
 
   ngOnInit() {
@@ -113,6 +115,10 @@ export class AppComponent implements OnInit {
         return (beforeLogHours == afterLogHours && afterLogHours == hoursInputString);
       });
     }
+  }
+
+  saveTableDataAsExcelFile() {
+    this.excelService.exportAsExcelFile(this.originalRowData, 'sample');
   }
 
   /**
