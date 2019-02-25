@@ -1,14 +1,21 @@
-<!-- enableSorting = sorting is of 3 types: ascending, descending and 3rd original data as it is -->
+
+<div class="row">
+  <input type="number" [(ngModel)]="hoursInput">
+  <button (click)="getAllRecordsWithinInputHours()">
+    Get all records for the hours
+  </button>
+</div>
 
 <ag-grid-angular
-  class="ag-theme-balham"
+  class="ag-theme-balham agGrid"
   [rowData]="rowData"
   [columnDefs]="columnDefs"
-  [enableSorting]="true"
-  [enableColResize]="true"
   [animateRows]="true"
   [enableFilter]="false"
   [floatingFilter]="true"
+  [defaultColDef]="defaultColDef"
+  [pagination]="true"
+  [paginationAutoPageSize]="true"
   [rowSelection]="rowSelection"
   (rowClicked)="onRowClicked($event)"
   (rowSelected)="onRowSelected($event)"
@@ -16,3 +23,4 @@
   (modelUpdated)="onModelUpdated($event)"
 >
 </ag-grid-angular>
+

@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { AppService } from './app.service';
 import { TableDataModel } from './app.model';
+import { fromEvent } from 'rxjs';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-root',
@@ -9,12 +11,16 @@ import { TableDataModel } from './app.model';
 })
 export class AppComponent implements OnInit {
 
+  // number of hours input
+  hoursInput: number;
+
   // ag-grid column and row variables
   columnDefs = [];
   rowData: Array<TableDataModel> = [];
 
   // other ag-grid variables
   public gridApi;
+  public defaultColDef;
   public rowSelection = "single"; // or multiple if required
 
   constructor(
@@ -22,52 +28,44 @@ export class AppComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-
     this.columnDefs = [
       {
         headerName: 'User id',
         field: 'USER_ID',
-        filter: "agTextColumnFilter",
-        caseSensitive: true, // usually ag-grid lowercases anything you search, with this it won't
         suppressMenu: true
       },
       {
         headerName: 'Company cd',
         field: 'COMPANY_CD',
-        filter: "agTextColumnFilter",
-        caseSensitive: true,
         suppressMenu: true,
         // sort: 'asc' // you can use this if you want sort by default . When you click on column, it will sort other ways anyway
       },
       {
         headerName: 'Before',
         field: 'BEFORE_EXECUTE_LOG',
-        filter: "agTextColumnFilter",
-        caseSensitive: true,
         suppressMenu: true
       },
       {
         headerName: 'After',
         field: 'AFTER_EXECUTE_LOG',
-        filter: "agTextColumnFilter",
-        caseSensitive: true,
         suppressMenu: true
       },
       {
         headerName: 'Time',
         field: 'TIME_SEC',
-        filter: "agNumberColumnFilter",
         suppressMenu: true
-      },
-      {
-        headerName: 'Id',
-        field: 'REQUEST_TRACKINGID',
-        filter: "agTextColumnFilter",
-        caseSensitive: true,
-        suppressMenu: true,
-        hide: true // I think you wouldn't want to show id so hide: true
       }
     ];
+
+
+    this.defaultColDef = {
+      // set every column width
+      filter: "agTextColumnFilter",
+      // make every column editable
+      sortable: true,
+      autoHeight: true,
+      resizable: true
+    }
 
     /**
      * rowData = actual data array mapping to columnDefs that you defined above
@@ -76,11 +74,24 @@ export class AppComponent implements OnInit {
       .subscribe(
         (response: Array<TableDataModel>) => {
           this.rowData = response;
+          this.gridApi.setRowData(this.rowData.slice(0, 30));
         },
         (error) => {
           console.log(error);
         }
       );
+  }
+
+  getAllRecordsWithinInputHours() {
+    if (this.rowData && this.hoursInput) {
+      console.log(_.filter(this.rowData, (row, i) => {
+        let hoursInputString = String(this.hoursInput);
+        // String(parseInt(str, 10)) removes leading zeroes. so { 08 => 8, 15 => 15 }
+        let beforeLogHours = String(parseInt(row['BEFORE_EXECUTE_LOG'].split(":")[0], 10));
+        let afterLogHours = String(parseInt(row['AFTER_EXECUTE_LOG'].split(":")[0], 10));
+        return (beforeLogHours == afterLogHours && afterLogHours == hoursInputString);
+      }));
+    } 
   }
 
   /**
@@ -126,7 +137,16 @@ export class AppComponent implements OnInit {
    */
   onGridReady(params) {
     this.gridApi = params.api;
-    // console.log(this.gridApi)
+    // fit table to width
+    params.api.sizeColumnsToFit();
+
+    // fit table to width on resize
+    fromEvent(window, "resize")
+      .subscribe(
+        (res) => {
+          params.api.sizeColumnsToFit();
+        }
+      )
 
     // On initial viewing, before any search is performed,
     // there is no overlay
