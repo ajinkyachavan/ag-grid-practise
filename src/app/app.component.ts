@@ -16,7 +16,6 @@ export class AppComponent implements OnInit {
   // number of hours input
   hoursInput: number;
 
-
   // ag-grid column and row variables
   columnDefs = [];
   rowData: Array<TableDataModel> = [];
@@ -35,6 +34,7 @@ export class AppComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    // read README.md for details
     this.frameworkComponents = {
       popupButtonRenderer: PopupButtonRendererComponent
     }
@@ -73,7 +73,7 @@ export class AppComponent implements OnInit {
       }
     ];
 
-
+    // behavior of table
     this.defaultColDef = {
       filter: "agTextColumnFilter",
       sortable: true,
@@ -96,6 +96,7 @@ export class AppComponent implements OnInit {
       );
   }
 
+  // whenever something is entered in input textbox
   onInputChange(event) {
     // on Input change, reset row data so that filter works on original array of values
     this.rowData = this.originalRowData;
@@ -117,8 +118,9 @@ export class AppComponent implements OnInit {
     }
   }
 
+  // save excel
   saveTableDataAsExcelFile() {
-    this.excelService.exportAsExcelFile(this.originalRowData, 'sample');
+    this.excelService.exportAsExcelFile(this.originalRowData, 'aiMetrics');
   }
 
   /**
