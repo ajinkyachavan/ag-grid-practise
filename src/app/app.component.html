@@ -1,6 +1,18 @@
+<!-- enableSorting = sorting is of 3 types: ascending, descending and 3rd original data as it is -->
+
 <ag-grid-angular
   class="ag-theme-balham"
   [rowData]="rowData"
   [columnDefs]="columnDefs"
+  [enableSorting]="true"
+  [enableColResize]="true"
+  [animateRows]="true"
+  [enableFilter]="false"
+  [floatingFilter]="true"
+  [rowSelection]="rowSelection"
+  (rowClicked)="onRowClicked($event)"
+  (rowSelected)="onRowSelected($event)"
+  (gridReady)="onGridReady($event)"
+  (modelUpdated)="onModelUpdated($event)"
 >
 </ag-grid-angular>

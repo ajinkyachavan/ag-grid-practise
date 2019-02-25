@@ -8,8 +8,14 @@ import { TableDataModel } from './app.model';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
+
+  // ag-grid column and row variables
   columnDefs = [];
   rowData: Array<TableDataModel> = [];
+
+  // other ag-grid variables
+  public gridApi;
+  public rowSelection = "single"; // or multiple if required
 
   constructor(
     private appService: AppService
@@ -17,31 +23,45 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
 
-    /**
-     * each element in this array of objects describes one column
-     * 
-     * @params
-     *  headerName = what is shown in the UI table column header
-     *  field = actual field name in table object
-     *
-     *  e.g.
-     *
-    *  {
-    *   "USER_ID": "BobAlnPennInd3065010",
-    *   "COMPANY_CD": "PA",
-    *   "BEFORE_EXECUTE_LOG": "08:26:05",
-    *   "AFTER_EXECUTE_LOG": "08:26:16",
-    *   "TIME_SEC": 10.99,
-    *   "REQUEST_TRACKINGID": "BobAlnPennInd3065010-70d72386-0ade-4475-8d14-b2e4cc865a01-tBswf-01-02-2019-08:26:8570"
-    * },
-     */
     this.columnDefs = [
-      { headerName: 'User id', field: 'USER_ID', filter: "agTextColumnFilter" },
-      { headerName: 'Company cd', field: 'COMPANY_CD', filter: "agTextColumnFilter" },
-      { headerName: 'Before', field: 'BEFORE_EXECUTE_LOG', filter: "agTextColumnFilter" },
-      { headerName: 'After', field: 'AFTER_EXECUTE_LOG', filter: "agTextColumnFilter" },
-      { headerName: 'Time', field: 'TIME_SEC', filter: "agNumberColumnFilter" },
-      { headerName: 'Id', field: 'REQUEST_TRACKINGID', filter: "agTextColumnFilter" }
+      {
+        headerName: 'User id',
+        field: 'USER_ID',
+        filter: "agTextColumnFilter",
+        suppressMenu: true
+      },
+      {
+        headerName: 'Company cd',
+        field: 'COMPANY_CD',
+        filter: "agTextColumnFilter",
+        suppressMenu: true,
+        // sort: 'asc' // you can use this if you want sort by default . When you click on column, it will sort other ways anyway
+      },
+      {
+        headerName: 'Before',
+        field: 'BEFORE_EXECUTE_LOG',
+        filter: "agTextColumnFilter",
+        suppressMenu: true
+      },
+      {
+        headerName: 'After',
+        field: 'AFTER_EXECUTE_LOG',
+        filter: "agTextColumnFilter",
+        suppressMenu: true
+      },
+      {
+        headerName: 'Time',
+        field: 'TIME_SEC',
+        filter: "agNumberColumnFilter",
+        suppressMenu: true
+      },
+      {
+        headerName: 'Id',
+        field: 'REQUEST_TRACKINGID',
+        filter: "agTextColumnFilter",
+        suppressMenu: true,
+        hide: true // I think you wouldn't want to show id so hide: true
+      }
     ];
 
     /**
@@ -54,13 +74,61 @@ export class AppComponent implements OnInit {
         },
         (error) => {
           console.log(error);
-        },
-        () => {
-          // this block is not required unless used
-          console.log("Got table data successfully");
         }
       );
 
+  }
+
+  /**
+   * when row is clicked
+   */
+  onRowClicked(event) {
+    console.log(event.rowIndex + "th row clicked")
+    console.log(event);
+    console.log(event.data);
+    console.log("-------");
+  }
+
+  /**
+   * when row is selected e.g. the popup button is clicked
+   */
+  onRowSelected(event) {
+    console.log(event.rowIndex + "th row selected")
+    console.log(event);
+    console.log(event.data);
+    console.log("-------");
+  }
+
+
+
+  /**
+   * @listens for any change in ag-grid.  
+   */
+  onModelUpdated($event) {
+    // If you search for something and nothing matches, show "No Rows to show"
+    // showNoRowsOverlay() takes care of that, we don't need to know how
+
+    // overlay = popup that shows when some error or info needs to be shown on 
+    // top of grid. hideOverlay = hide any popups if data exists
+    if (this.gridApi && this.gridApi.rowModel.rowsToDisplay.length === 0) {
+      this.gridApi.showNoRowsOverlay();
+    }
+    if (this.gridApi && this.gridApi.rowModel.rowsToDisplay.length > 0) {
+      this.gridApi.hideOverlay();
+    }
+  }
+
+  /**
+   * main function called for housekeeping purposes of ag-grid
+   * We can use this.gridApi to do a lot of things.
+   */
+  onGridReady(params) {
+    this.gridApi = params.api;
+    // console.log(this.gridApi)
+
+    // On initial viewing, before any search is performed,
+    // there is no overlay
+    this.gridApi.hideOverlay();
   }
 
 }
