@@ -1,29 +1,31 @@
-<div class="row">
-  <input
-    type="number"
-    [(ngModel)]="hoursInput"
-    (ngModelChange)="onInputChange($event)"
-  >
-  <button (click)="getAllRecordsWithinInputHours()">
-    Get all records for the hours
-  </button>
-</div>
+<div class="container">
+  <div>
+    <input
+      type="number"
+      [(ngModel)]="hoursInput"
+      (ngModelChange)="onInputChange($event)"
+    >
+    <button (click)="getAllRecordsWithinInputHours()">
+      Get all records for the hours
+    </button>
+  </div>
 
-<ag-grid-angular
-  class="ag-theme-balham agGrid"
-  [rowData]="rowData"
-  [columnDefs]="columnDefs"
-  [animateRows]="true"
-  [enableFilter]="false"
-  [floatingFilter]="true"
-  [defaultColDef]="defaultColDef"
-  [pagination]="true"
-  [paginationAutoPageSize]="true"
-  [frameworkComponents]="frameworkComponents"
-  [rowSelection]="rowSelection"
-  (rowClicked)="onRowClicked($event)"
-  (rowSelected)="onRowSelected($event)"
-  (gridReady)="onGridReady($event)"
-  (modelUpdated)="onModelUpdated($event)"
->
-</ag-grid-angular>
+  <ag-grid-angular
+    class="ag-theme-balham agGrid"
+    [rowData]="rowData"
+    [columnDefs]="columnDefs"
+    [animateRows]="true"
+    [enableFilter]="false"
+    [floatingFilter]="true"
+    [defaultColDef]="defaultColDef"
+    [pagination]="true"
+    [paginationAutoPageSize]="true"
+    [frameworkComponents]="frameworkComponents"
+    [rowSelection]="rowSelection"
+    (rowClicked)="onRowClicked($event)"
+    (rowSelected)="onRowSelected($event)"
+    (gridReady)="onGridReady($event)"
+    (modelUpdated)="onModelUpdated($event)"
+  >
+  </ag-grid-angular>
+</div>

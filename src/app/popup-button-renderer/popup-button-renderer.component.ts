@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CustomPopupComponent } from '../custom-popup/custom-popup.component';
+import { AppService } from '../app.service';
 
 @Component({
   selector: 'app-popup-button-renderer',
@@ -9,10 +10,12 @@ import { CustomPopupComponent } from '../custom-popup/custom-popup.component';
 })
 export class PopupButtonRendererComponent {
 
- public params: any;
+  public params: any;
+  public popupData: any[];
 
   constructor(
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private appService: AppService
   ) { }
 
   agInit(params: any): void {
@@ -24,8 +27,19 @@ export class PopupButtonRendererComponent {
   }
 
   public showPopup() {
-    const modalRef = this.modalService.open(CustomPopupComponent);
-    modalRef.componentInstance.name = 'World';
+    this.appService.getPopupData()
+      .subscribe(
+        (response: any[]) => {
+          this.popupData = response;
+        },
+        (error) => {
+          console.error(error);
+        },
+        () => {
+          const modalRef = this.modalService.open(CustomPopupComponent);
+          modalRef.componentInstance.popUpRowData = this.popupData;
+        }
+      );
   }
 
 }

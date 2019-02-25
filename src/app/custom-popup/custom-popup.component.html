@@ -10,7 +10,25 @@
   </button>
 </div>
 <div class="modal-body">
-  <p>Hello, {{name}}!</p>
+  
+  <ag-grid-angular
+    class="ag-theme-balham agGridPopup"
+    [rowData]="popUpRowData"
+    [columnDefs]="columnDefs"
+    [animateRows]="true"
+    [enableFilter]="false"
+    [floatingFilter]="true"
+    [defaultColDef]="defaultColDef"
+    [pagination]="true"
+    [paginationAutoPageSize]="true"
+    [rowSelection]="rowSelection"
+    (rowClicked)="onRowClicked($event)"
+    (rowSelected)="onRowSelected($event)"
+    (gridReady)="onGridReady($event)"
+    (modelUpdated)="onModelUpdated($event)"
+  >
+  </ag-grid-angular>
+
 </div>
 <div class="modal-footer">
   <button
