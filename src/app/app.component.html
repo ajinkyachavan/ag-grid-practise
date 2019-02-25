@@ -1,6 +1,6 @@
 
 <div class="row">
-  <input type="number" [(ngModel)]="hoursInput">
+  <input type="number" [(ngModel)]="hoursInput" (ngModelChange)="onInputChange($event)">
   <button (click)="getAllRecordsWithinInputHours()">
     Get all records for the hours
   </button>

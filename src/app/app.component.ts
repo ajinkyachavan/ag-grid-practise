@@ -14,9 +14,12 @@ export class AppComponent implements OnInit {
   // number of hours input
   hoursInput: number;
 
+
   // ag-grid column and row variables
   columnDefs = [];
   rowData: Array<TableDataModel> = [];
+  // original row data to reset table value after filter is completed
+  originalRowData: Array<TableDataModel> = [];
 
   // other ag-grid variables
   public gridApi;
@@ -73,7 +76,7 @@ export class AppComponent implements OnInit {
     this.appService.getTableData()
       .subscribe(
         (response: Array<TableDataModel>) => {
-          this.rowData = response;
+          this.originalRowData = this.rowData = response;
           this.gridApi.setRowData(this.rowData.slice(0, 30));
         },
         (error) => {
@@ -82,16 +85,25 @@ export class AppComponent implements OnInit {
       );
   }
 
+  onInputChange(event) {
+    // on Input change, reset row data so that filter works on original array of values
+    this.rowData = this.originalRowData;
+    // filter form every time input is entered
+    this.getAllRecordsWithinInputHours();
+  }
+
   getAllRecordsWithinInputHours() {
     if (this.rowData && this.hoursInput) {
-      console.log(_.filter(this.rowData, (row, i) => {
+      // _.filter is a function of lodash library (npm i --save lodash) which works well with objects as well
+      // https://lodash.com/docs/4.17.11#filter
+      this.rowData = _.filter(this.rowData, (row, i) => {
         let hoursInputString = String(this.hoursInput);
         // String(parseInt(str, 10)) removes leading zeroes. so { 08 => 8, 15 => 15 }
         let beforeLogHours = String(parseInt(row['BEFORE_EXECUTE_LOG'].split(":")[0], 10));
         let afterLogHours = String(parseInt(row['AFTER_EXECUTE_LOG'].split(":")[0], 10));
         return (beforeLogHours == afterLogHours && afterLogHours == hoursInputString);
-      }));
-    } 
+      });
+    }
   }
 
   /**
